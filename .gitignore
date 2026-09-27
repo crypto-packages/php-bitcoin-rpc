@@ -1,0 +1,27 @@
+/vendor/
+composer.lock
+.phpunit.result.cache
+.phpunit.cache/
+
+# Local / workspace only (not part of the published package)
+/AI/
+/dev/
+/.idea/
+/.vscode/
+/.fleet/
+/.phpactor.json
+
+.env
+.env.*
+!.env.example
+
+*.log
+*.cache
+*.swp
+*~
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+/auth.json
+/composer.phar

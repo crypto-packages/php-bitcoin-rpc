@@ -1,0 +1,19 @@
+{
+    "name": "crypto-packages/php-bitcoin-rpc",
+    "type": "library",
+    "description": "Minimal Bitcoin JSON-RPC client based on Guzzle",
+    "keywords": ["bitcoin", "jsonrpc", "guzzle", "rpc"],
+    "homepage": "https://github.com/crypto-packages/php-bitcoin-rpc",
+    "license": "MIT",
+    "require": {
+        "php": ">=7.4",
+        "guzzlehttp/guzzle": "^7.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "CryptoPackages\\BitcoinRpc\\": "src/"
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
