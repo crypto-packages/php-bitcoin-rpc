@@ -9,6 +9,67 @@ use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\ClientInterface;
 use InvalidArgumentException;
 
+/**
+ * Bitcoin JSON-RPC client. RPC methods are forwarded via __call.
+ *
+ * PHPDoc @method entries are for IDE only (PhpStorm). Runtime accepts any RPC name.
+ * Curated from app usage + common BTC/LTC/DOGE/BCH CLI surfaces under /dev.
+ *
+ * @method Response abandontransaction(mixed ...$params)
+ * @method Response bumpfee(mixed ...$params)
+ * @method Response combinerawtransaction(mixed ...$params)
+ * @method Response createrawtransaction(mixed ...$params)
+ * @method Response createwallet(mixed ...$params)
+ * @method Response decoderawtransaction(mixed ...$params)
+ * @method Response decodescript(mixed ...$params)
+ * @method Response deriveaddresses(mixed ...$params)
+ * @method Response estimatefee(mixed ...$params)
+ * @method Response estimatesmartfee(mixed ...$params)
+ * @method Response fundrawtransaction(mixed ...$params)
+ * @method Response getaddressinfo(mixed ...$params)
+ * @method Response getbalance(mixed ...$params)
+ * @method Response getbalances(mixed ...$params)
+ * @method Response getbestblockhash(mixed ...$params)
+ * @method Response getblock(mixed ...$params)
+ * @method Response getblockchaininfo(mixed ...$params)
+ * @method Response getblockcount(mixed ...$params)
+ * @method Response getblockhash(mixed ...$params)
+ * @method Response getblockheader(mixed ...$params)
+ * @method Response getdescriptorinfo(mixed ...$params)
+ * @method Response getmempoolancestors(mixed ...$params)
+ * @method Response getmempooldescendants(mixed ...$params)
+ * @method Response getmempoolentry(mixed ...$params)
+ * @method Response getmempoolinfo(mixed ...$params)
+ * @method Response getnetworkinfo(mixed ...$params)
+ * @method Response getnewaddress(mixed ...$params)
+ * @method Response getrawmempool(mixed ...$params)
+ * @method Response getrawtransaction(mixed ...$params)
+ * @method Response gettransaction(mixed ...$params)
+ * @method Response gettxout(mixed ...$params)
+ * @method Response getwalletinfo(mixed ...$params)
+ * @method Response importaddress(mixed ...$params)
+ * @method Response importdescriptors(mixed ...$params)
+ * @method Response importmulti(mixed ...$params)
+ * @method Response importprivkey(mixed ...$params)
+ * @method Response importpubkey(mixed ...$params)
+ * @method Response listlockunspent(mixed ...$params)
+ * @method Response listsinceblock(mixed ...$params)
+ * @method Response listtransactions(mixed ...$params)
+ * @method Response listunspent(mixed ...$params)
+ * @method Response listwallets(mixed ...$params)
+ * @method Response loadwallet(mixed ...$params)
+ * @method Response lockunspent(mixed ...$params)
+ * @method Response prioritisetransaction(mixed ...$params)
+ * @method Response rescanblockchain(mixed ...$params)
+ * @method Response scantxoutset(mixed ...$params)
+ * @method Response sendrawtransaction(mixed ...$params)
+ * @method Response sendtoaddress(mixed ...$params)
+ * @method Response signrawtransactionwithkey(mixed ...$params)
+ * @method Response signrawtransactionwithwallet(mixed ...$params)
+ * @method Response testmempoolaccept(mixed ...$params)
+ * @method Response unloadwallet(mixed ...$params)
+ * @method Response validateaddress(mixed ...$params)
+ */
 class BitcoinRpcClient
 {
     /** @var ClientInterface */
