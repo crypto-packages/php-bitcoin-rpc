@@ -144,14 +144,12 @@ class BitcoinRpcClient
             ],
         ]);
 
+        $status = $response->getStatusCode();
         $raw = (string) $response->getBody();
         $decoded = json_decode($raw, true);
 
-        if (!is_array($decoded)) {
-            throw new RpcException('Invalid JSON-RPC response', 0, null);
-        }
-
-        if (array_key_exists('error', $decoded) && $decoded['error'] !== null) {
+        // Prefer node JSON-RPC error over raw HTTP status (Core often uses HTTP 500 + error body).
+        if (is_array($decoded) && array_key_exists('error', $decoded) && $decoded['error'] !== null) {
             $error = is_array($decoded['error']) ? $decoded['error'] : ['message' => (string) $decoded['error']];
             $message = isset($error['message']) ? (string) $error['message'] : 'JSON-RPC error';
             $code = isset($error['code']) ? (int) $error['code'] : 0;
@@ -159,7 +157,23 @@ class BitcoinRpcClient
             throw new RpcException($message, $code, $error);
         }
 
-        return new Response($decoded['result'] ?? null);
+        if ($status === 401 || $status === 403) {
+            throw new RpcException(
+                sprintf('HTTP %d authentication failed: %s', $status, $this->bodySnippet($raw)),
+                $status,
+                null
+            );
+        }
+
+        if (is_array($decoded) && array_key_exists('result', $decoded)) {
+            return new Response($decoded['result']);
+        }
+
+        throw new RpcException(
+            sprintf('Invalid JSON-RPC response (HTTP %d): %s', $status, $this->bodySnippet($raw)),
+            $status,
+            null
+        );
     }
 
     public function getPath(): string
@@ -217,9 +231,10 @@ class BitcoinRpcClient
     private function createHttpClient(array $config): ClientInterface
     {
         $options = [
-            'base_uri' => $config['url'],
-            'headers'  => $config['headers'],
-            'http_errors' => true,
+            'base_uri'    => $config['url'],
+            'headers'     => $config['headers'],
+            // Bitcoind often returns HTTP 4xx/5xx with a JSON-RPC error body; parse it ourselves.
+            'http_errors' => false,
         ];
 
         if ($config['auth'] !== null) {
@@ -233,5 +248,19 @@ class BitcoinRpcClient
         }
 
         return new GuzzleClient($options);
+    }
+
+    private function bodySnippet(string $raw, int $max = 200): string
+    {
+        $trimmed = trim($raw);
+        if ($trimmed === '') {
+            return '(empty body)';
+        }
+
+        if (strlen($trimmed) <= $max) {
+            return $trimmed;
+        }
+
+        return substr($trimmed, 0, $max) . '...';
     }
 }

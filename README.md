@@ -59,8 +59,12 @@ $plain = $client->setWallet(null);
 
 ## Errors
 
-- Transport / HTTP: Guzzle exceptions (`GuzzleHttp\Exception\...`)
-- JSON-RPC `error` object: `CryptoPackages\BitcoinRpc\Exceptions\RpcException`
+Guzzle is configured with `http_errors => false` so Bitcoin Core HTTP 4xx/5xx responses with a JSON-RPC `error` body are parsed instead of becoming a truncated Guzzle `ServerException`.
+
+- JSON-RPC `error` object (any HTTP status): `CryptoPackages\BitcoinRpc\Exceptions\RpcException` with node `message` / `code`
+- HTTP 401/403 without a usable RPC error: `RpcException` (authentication failed)
+- Non-JSON / empty failure body: `RpcException` including HTTP status + short body snippet
+- Pure transport failures (DNS, timeout, …): Guzzle exceptions still bubble
 
 ## License
 
